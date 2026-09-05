@@ -49,7 +49,7 @@ cursor.execute("""
         id_agendamento INTEGER NOT NULL,
         id_servico INTEGER NOT NULL,
         PRIMARY KEY (id_agendamento, id_servico),
-        FOREIGN KEY (id_agendamento) REFERENCES agendamentos(id_agendamento) ON DELETE CASCADE,
+        FOREIGN KEY (id_agendamento) REFERENCES agendamento(id_agendamento) ON DELETE CASCADE,
         FOREIGN KEY (id_servico) REFERENCES servico(id_servico) ON DELETE CASCADE
 );
 """)
