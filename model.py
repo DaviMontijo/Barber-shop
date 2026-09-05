@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS servico (
 ''')
 
 cursor.execute("""
-    CREATE TABLE IF NOT EXISTS agendamentos (
+    CREATE TABLE IF NOT EXISTS agendamento (
         id_agendamento INTEGER PRIMARY KEY AUTOINCREMENT,
         id_barbeiro INTEGER NOT NULL,
         id_cliente INTEGER NOT NULL,
