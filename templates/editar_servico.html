@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Serviço - Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <a href="#conteudo-principal" class="sr-only-focusable">Pular para o conteúdo principal</a>
+
+    <header>
+        <div class="header-container">
+            <h1>Barbearia Estilo & Corte</h1>
+            <nav aria-label="Navegação Principal">
+                <a href="{{ url_for('index') }}">Início</a> |
+                <a href="{{ url_for('barbeiro') }}">Barbeiros</a> |
+                <a href="{{ url_for('servico') }}">Serviços</a>
+            </nav>
+        </div>
+    </header>
+
+    <hr>
+
+    <main id="conteudo-principal">
+        {% if request.args.get('mensagem_erro') %}
+            <div class="mensagem-erro" aria-live="assertive">
+                <p><strong>⚠ Erro:</strong> {{ request.args.get('mensagem_erro') }}</p>
+            </div>
+        {% endif %}
+
+        <div class="formulario-secao">
+            <h2>Editar Serviço #{{ servico[0] }}</h2>
+            
+            <form action="{{ url_for('editar_servico', id_servico=servico[0]) }}" method="POST">
+                <div class="campo-grupo">
+                    <label for="nome_servico">Nome do Serviço *</label><br>
+                    <input type="text" id="nome_servico" name="nome_servico" value="{{ servico[1] }}" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="preco">Preço (R$) *</label><br>
+                    <input type="text" id="preco" name="preco" value="{{ '%.2f'|format(servico[2]) }}" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="duracao">Duração (em minutos) *</label><br>
+                    <input type="number" id="duracao" name="duracao" value="{{ servico[3] }}" min="1" required>
+                </div>
+
+                <div class="botao-grupo">
+                    <button type="submit">Salvar Alterações</button>
+                    <a href="{{ url_for('servico') }}">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <hr>
+
+    <footer>
+        <div class="rodape-box">
+            <p>&copy; Barbearia Estilo & Corte</p>
+        </div>
+    </footer>
+
+</body>
+</html>

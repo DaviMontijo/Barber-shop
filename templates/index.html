@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início - Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <a href="#conteudo-principal" class="sr-only-focusable">Pular para o conteúdo principal</a>
+
+    <header>
+        <div class="header-container">
+            <h1>Barbearia Estilo & Corte</h1>
+            <nav aria-label="Navegação Principal">
+                <a href="{{ url_for('index') }}">Início</a> |
+                <a href="{{ url_for('barbeiro') }}">Barbeiros</a> |
+                <a href="{{ url_for('servico') }}">Serviços</a>
+            </nav>
+        </div>
+    </header>
+
+    <hr>
+
+    <main id="conteudo-principal">
+        <div class="conteudo-box">
+            <h2>Painel Principal</h2>
+            <p>Bem-vindo ao sistema de gerenciamento da barbearia. Aqui você pode gerenciar barbeiros, serviços e agendamentos. Utilize o menu acima para navegar entre as páginas.</p>
+        </div>
+
+        <div class="imagem-box">
+            <img src="{{ url_for('static', filename='img/barbearia.jfif') }}" alt="Foto do interior da barbearia mostrando as cadeiras e espelhos">
+        </div>
+    </main>
+
+    <hr>
+
+    <footer>
+        <div class="rodape-box">
+            <p>&copy; Barbearia Estilo & Corte</p>
+        </div>
+    </footer>
+
+</body>
+</html>

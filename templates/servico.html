@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços - Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <a href="#conteudo-principal" class="sr-only-focusable">Pular para o conteúdo principal</a>
+
+    <header>
+        <div class="header-container">
+            <h1>Barbearia Estilo & Corte</h1>
+            <nav aria-label="Navegação Principal">
+                <a href="{{ url_for('index') }}">Início</a> |
+                <a href="{{ url_for('barbeiro') }}">Barbeiros</a> |
+                <a href="{{ url_for('servico') }}">Serviços</a>
+            </nav>
+        </div>
+    </header>
+
+    <hr>
+
+    <main id="conteudo-principal">
+        {% if request.args.get('mensagem_sucesso') %}
+            <div class="mensagem-sucesso" aria-live="polite">
+                <p><strong>✓ Sucesso:</strong> {{ request.args.get('mensagem_sucesso') }}</p>
+            </div>
+        {% endif %}
+
+        {% if request.args.get('mensagem_erro') %}
+            <div class="mensagem-erro" aria-live="assertive">
+                <p><strong>⚠ Erro:</strong> {{ request.args.get('mensagem_erro') }}</p>
+            </div>
+        {% endif %}
+
+        <div class="formulario-secao">
+            <h2>Cadastrar Serviço</h2>
+            
+            <form action="{{ url_for('servico') }}" method="POST">
+                <div class="campo-grupo">
+                    <label for="nome_servico">Nome do Serviço *</label><br>
+                    <input type="text" id="nome_servico" name="nome_servico" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="preco">Preço (R$) *</label><br>
+                    <input type="text" id="preco" name="preco" placeholder="Ex: 35.00" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="duracao">Duração (em minutos) *</label><br>
+                    <input type="number" id="duracao" name="duracao" min="1" placeholder="Ex: 30" required>
+                </div>
+
+                <div class="botao-grupo">
+                    <button type="submit">Cadastrar Serviço</button>
+                </div>
+            </form>
+        </div>
+
+        <hr>
+
+        <div class="tabela-secao">
+            <h2>Serviços Cadastrados</h2>
+            
+            <!-- Campo de Busca/Filtro Simplificado -->
+            <form action="{{ url_for('servico') }}" method="GET" class="busca-box">
+                <label for="busca_servico">Buscar serviço:</label>
+                <input type="text" id="busca_servico" name="q" value="{{ request.args.get('q', '') }}" placeholder="Digite o serviço...">
+                <button type="submit">Filtrar</button>
+                {% if request.args.get('q') %}
+                    <a href="{{ url_for('servico') }}">Limpar Filtro</a>
+                {% endif %}
+            </form>
+            <br>
+
+            {% if servicos %}
+                <table border="1">
+                    <caption>Catálogo de serviços oferecidos</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Preço</th>
+                            <th scope="col">Duração</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in servicos %}
+                            <tr>
+                                <td data-label="ID">{{ s[0] }}</td>
+                                <td data-label="Nome">{{ s[1] }}</td>
+                                <td data-label="Preço">R$ {{ "%.2f"|format(s[2]) }}</td>
+                                <td data-label="Duração">{{ s[3] }} min</td>
+                                <td data-label="Ações">
+                                    <div class="acoes-tabela">
+                                        <a href="{{ url_for('editar_servico', id_servico=s[0]) }}">Editar</a>
+                                        
+                                        <form action="{{ url_for('excluir_servico', id_servico=s[0]) }}" method="POST" style="display:inline;">
+                                            <button type="submit" onclick="return confirm('Tem certeza que deseja excluir o serviço {{ s[1] }}?');">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Nenhum serviço encontrado.</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <hr>
+
+    <footer>
+        <div class="rodape-box">
+            <p>&copy; Barbearia Estilo & Corte</p>
+        </div>
+    </footer>
+
+</body>
+</html>

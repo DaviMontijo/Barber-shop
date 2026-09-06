@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbeiros - Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <a href="#conteudo-principal" class="sr-only-focusable">Pular para o conteúdo principal</a>
+
+    <header>
+        <div class="header-container">
+            <h1>Barbearia Estilo & Corte</h1>
+            <nav aria-label="Navegação Principal">
+                <a href="{{ url_for('index') }}">Início</a> |
+                <a href="{{ url_for('barbeiro') }}">Barbeiros</a> |
+                <a href="{{ url_for('servico') }}">Serviços</a>
+            </nav>
+        </div>
+    </header>
+
+    <hr>
+
+    <main id="conteudo-principal">
+        {% if request.args.get('mensagem_sucesso') %}
+            <div class="mensagem-sucesso" aria-live="polite">
+                <p><strong>✓ Sucesso:</strong> {{ request.args.get('mensagem_sucesso') }}</p>
+            </div>
+        {% endif %}
+
+        {% if request.args.get('mensagem_erro') %}
+            <div class="mensagem-erro" aria-live="assertive">
+                <p><strong>⚠ Erro:</strong> {{ request.args.get('mensagem_erro') }}</p>
+            </div>
+        {% endif %}
+
+        <div class="formulario-secao">
+            <h2>Cadastrar Barbeiro</h2>
+            
+            <form action="{{ url_for('barbeiro') }}" method="POST">
+                <div class="campo-grupo">
+                    <label for="nome_barbeiro">Nome do Barbeiro *</label><br>
+                    <input type="text" id="nome_barbeiro" name="nome_barbeiro" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="tempo_experiencia">Tempo de Experiência (em anos) *</label><br>
+                    <input type="number" id="tempo_experiencia" name="tempo_experiencia" min="0" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="descricao_barbeiro">Descrição *</label><br>
+                    <textarea id="descricao_barbeiro" name="descricao_barbeiro" rows="4" required></textarea>
+                </div>
+
+                <div class="campo-grupo">
+                    <fieldset>
+                        <legend>Serviços Prestados *</legend>
+                        {% for servico in servicos %}
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="servico_{{ servico[0] }}" name="servicos" value="{{ servico[0] }}">
+                                <label for="servico_{{ servico[0] }}">{{ servico[1] }}</label>
+                            </div>
+                        {% endfor %}
+                    </fieldset>
+                </div>
+
+                <div class="botao-grupo">
+                    <button type="submit">Cadastrar Barbeiro</button>
+                </div>
+            </form>
+        </div>
+
+        <hr>
+
+        <div class="tabela-secao">
+            <h2>Barbeiros Cadastrados</h2>
+            
+            <!-- Campo de Busca/Filtro Simplificado -->
+            <form action="{{ url_for('barbeiro') }}" method="GET" class="busca-box">
+                <label for="busca_nome">Buscar por nome:</label>
+                <input type="text" id="busca_nome" name="q" value="{{ request.args.get('q', '') }}" placeholder="Digite o nome...">
+                <button type="submit">Filtrar</button>
+                {% if request.args.get('q') %}
+                    <a href="{{ url_for('barbeiro') }}">Limpar Filtro</a>
+                {% endif %}
+            </form>
+            <br>
+
+            {% if barbeiros %}
+                <table border="1">
+                    <caption>Listagem completa dos barbeiros da equipe</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Experiência</th>
+                            <th scope="col">Descrição</th>
+                            <th scope="col">Serviços Habilitados</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in barbeiros %}
+                            <tr>
+                                <td data-label="ID">{{ b[0] }}</td>
+                                <td data-label="Nome">{{ b[1] }}</td>
+                                <td data-label="Experiência">{{ b[2] }} anos</td>
+                                <td data-label="Descrição">{{ b[3] }}</td>
+                                <td data-label="Serviços Habilitados">{{ b[4] if b[4] else 'Nenhum' }}</td>
+                                <td data-label="Ações">
+                                    <div class="acoes-tabela">
+                                        <a href="{{ url_for('editar_barbeiro', id_barbeiro=b[0]) }}">Editar</a>
+                                        
+                                        <form action="{{ url_for('excluir_barbeiro', id_barbeiro=b[0]) }}" method="POST" style="display:inline;">
+                                            <button type="submit" onclick="return confirm('Tem certeza que deseja excluir o barbeiro {{ b[1] }}?');">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Nenhum barbeiro encontrado.</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <hr>
+
+    <footer>
+        <div class="rodape-box">
+            <p>&copy; Barbearia Estilo & Corte</p>
+        </div>
+    </footer>
+
+</body>
+</html>

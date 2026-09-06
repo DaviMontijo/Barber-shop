@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Barbeiro - Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <a href="#conteudo-principal" class="sr-only-focusable">Pular para o conteúdo principal</a>
+
+    <header>
+        <div class="header-container">
+            <h1>Barbearia Estilo & Corte</h1>
+            <nav aria-label="Navegação Principal">
+                <a href="{{ url_for('index') }}">Início</a> |
+                <a href="{{ url_for('barbeiro') }}">Barbeiros</a> |
+                <a href="{{ url_for('servico') }}">Serviços</a>
+            </nav>
+        </div>
+    </header>
+
+    <hr>
+
+    <main id="conteudo-principal">
+        {% if request.args.get('mensagem_erro') %}
+            <div class="mensagem-erro" aria-live="assertive">
+                <p><strong>⚠ Erro:</strong> {{ request.args.get('mensagem_erro') }}</p>
+            </div>
+        {% endif %}
+
+        <div class="formulario-secao">
+            <h2>Editar Barbeiro #{{ barbeiro[0] }}</h2>
+            
+            <form action="{{ url_for('editar_barbeiro', id_barbeiro=barbeiro[0]) }}" method="POST">
+                <div class="campo-grupo">
+                    <label for="nome_barbeiro">Nome do Barbeiro *</label><br>
+                    <input type="text" id="nome_barbeiro" name="nome_barbeiro" value="{{ barbeiro[1] }}" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="tempo_experiencia">Tempo de Experiência (em anos) *</label><br>
+                    <input type="number" id="tempo_experiencia" name="tempo_experiencia" value="{{ barbeiro[2] }}" min="0" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="descricao_barbeiro">Descrição *</label><br>
+                    <textarea id="descricao_barbeiro" name="descricao_barbeiro" rows="4" required>{{ barbeiro[3] }}</textarea>
+                </div>
+
+                <div class="campo-grupo">
+                    <fieldset>
+                        <legend>Serviços Prestados *</legend>
+                        {% for servico in servicos %}
+                            <div class="checkbox-item">
+                                <input type="checkbox" 
+                                       id="servico_{{ servico[0] }}" 
+                                       name="servicos" 
+                                       value="{{ servico[0] }}"
+                                       {% if servico[0] in ids_servicos_atuais %}checked{% endif %}>
+                                <label for="servico_{{ servico[0] }}">{{ servico[1] }}</label>
+                            </div>
+                        {% endfor %}
+                    </fieldset>
+                </div>
+
+                <div class="botao-grupo">
+                    <button type="submit">Salvar Alterações</button>
+                    <a href="{{ url_for('barbeiro') }}">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <hr>
+
+    <footer>
+        <div class="rodape-box">
+            <p>&copy; Barbearia Estilo & Corte</p>
+        </div>
+    </footer>
+
+</body>
+</html>
